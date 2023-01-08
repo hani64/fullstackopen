@@ -1,16 +1,6 @@
 import React from 'react'
 
-import Header  from './components/Header'
-import Content from './components/Content'
-import Total from './components/Total'
-
-const Course = ({course}) => (
-  <>
-    <Header courseName={course.name} />
-    <Content parts={course.parts} />
-    <Total parts={course.parts} />
-  </>
-)
+import Course from './components/Course'
 
 const App = () => {
   const courses = [
