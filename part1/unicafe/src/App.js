@@ -5,10 +5,11 @@ const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
 const Statistic = ({text, count}) => <div>{text} {count} </div>
 
 const Statistics = ({good, bad, neutral}) => {
-  const average = (good, neutral, bad) => good + neutral + bad ? (good * 1 + neutral * 0 + bad * -1) / (good + neutral + bad) : 0
-  const positive = (good, neutral, bad) => good + neutral + bad ? (good / (good + neutral + bad)) * 100 : 0
+  const average = (good, neutral, bad) => (good * 1 + neutral * 0 + bad * -1) / (good + neutral + bad)
+  const positive = (good, neutral, bad) => (good / (good + neutral + bad)) * 100
 
   return (
+    good + neutral + bad ?
     <div>
       <h1>statistics</h1>
       <Statistic text={"Good"} count={good} />
@@ -17,6 +18,10 @@ const Statistics = ({good, bad, neutral}) => {
       <Statistic text={"All"} count={good + neutral + bad} />
       <Statistic text={"Average"} count={average(good, neutral, bad)} />
       <Statistic text={"Postive"} count={`${positive(good, neutral, bad)} %`} />
+    </div> :
+    <div>
+      <h1>statistics</h1>
+      No feedback given
     </div>
   )
 }
