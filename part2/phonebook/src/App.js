@@ -10,6 +10,13 @@ function App() {
 
   const addName = (e) => {
     e.preventDefault();
+    const names = persons.map((person) => person.name)
+    
+    if (names.includes(newName)){
+      alert(`${newName} is already added to phonebook`)
+      setNewName('');
+      return
+    }
     setPersons([...persons, { name: newName, id: persons.length + 1 }]);
     setNewName('');
   };
