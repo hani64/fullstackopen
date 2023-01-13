@@ -1,73 +1,55 @@
-import { useReducer, useState } from "react";
+import { useReducer, useState } from "react"
+
+import Filter from "./components/Filter"
+import PersonForm from "./components/PersonForm"
+import Persons from './components/Persons'
 
 function App() {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", phone: "39-44-5323523", id: 1 },
-  ]);
-  const [filter, setFilter] = useState("");
+  ])
+  const [filter, setFilter] = useState("")
   const [newEntry, setNewEntry] = useReducer(
     (prev, next) => {
-      return { ...prev, ...next };
+      return { ...prev, ...next }
     },
     { name: "", phone: "" }
-  );
+  )
 
   const addName = (e) => {
-    e.preventDefault();
-    const names = persons.map((person) => person.name);
+    e.preventDefault()
+    const names = persons.map((person) => person.name)
 
     if (names.includes(newEntry.name)) {
-      alert(`${newEntry.name} is already added to phonebook`);
-      setNewEntry({ name: "", phone: "" });
-      return;
+      alert(`${newEntry.name} is already added to phonebook`)
+      setNewEntry({ name: "", phone: "" })
+      return
     }
     if (newEntry.name === "" || newEntry.phone === "") {
-      alert(`Please enter something for both fields`);
-      return;
+      alert(`Please enter something for both fields`)
+      return
     }
     setPersons([
       ...persons,
       { name: newEntry.name, phone: newEntry.phone, id: persons.length + 1 },
-    ]);
-    setNewEntry({ name: "", phone: "" });
-  };
+    ])
+    setNewEntry({ name: "", phone: "" })
+  }
 
-  const changeName = (e) => setNewEntry({ name: e.target.value });
-  const changePhone = (e) => setNewEntry({ phone: e.target.value });
-  const changeFilter = (e) => setFilter(e.target.value);
+  const changeName = (e) => setNewEntry({ name: e.target.value })
+  const changePhone = (e) => setNewEntry({ phone: e.target.value })
+  const changeFilter = (e) => setFilter(e.target.value)
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with: <input value={filter} onChange={changeFilter} />
-      </div>
+      <Filter {...{ filter, changeFilter }} />
       <h2>add a new</h2>
-      <form onSubmit={addName}>
-        <div>
-          name: <input value={newEntry.name} onChange={changeName} />
-        </div>
-        <div>
-          number: <input value={newEntry.phone} onChange={changePhone} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm {...{ addName, newEntry, changeName, changePhone }}/>
       <h2>Numbers</h2>
-      <ul>
-        {[
-          ...persons.filter((person) =>
-            person.name.toLowerCase().startsWith(filter.toLowerCase())
-          ),
-        ].map((person) => (
-          <li key={person.id}>
-            {person.name} {person.phone}
-          </li>
-        ))}
-      </ul>
+      <Persons {...{ persons, filter }} />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
