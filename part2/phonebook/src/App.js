@@ -1,27 +1,35 @@
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 
 function App() {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', 
+    { name: 'Arto Hellas',
+      phone: '39-44-5323523', 
       id: 1
     },
   ]);
-  const [newName, setNewName] = useState('');
+  const [newEntry, setNewEntry] = useReducer((prev, next) => { 
+    return {...prev, ...next} 
+  }, {name:'', phone: ''})
 
   const addName = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     const names = persons.map((person) => person.name)
-    
-    if (names.includes(newName)){
-      alert(`${newName} is already added to phonebook`)
-      setNewName('');
+
+    if (names.includes(newEntry.name)){
+      alert(`${newEntry.name} is already added to phonebook`)
+      setNewEntry({name: '', phone: ''})
       return
     }
-    setPersons([...persons, { name: newName, id: persons.length + 1 }]);
-    setNewName('');
-  };
+    if (newEntry.name === '' || newEntry.phone === ''){
+      alert(`Please enter something for both fields`)
+      return
+    }
+    setPersons([...persons, { name: newEntry.name, phone: newEntry.phone, id: persons.length + 1 }])
+    setNewEntry({name: '', phone: ''})
+  }
 
-  const changeName = (e) => setNewName(e.target.value)
+  const changeName = (e) => setNewEntry({name: e.target.value})
+  const changePhone = (e) => setNewEntry({phone: e.target.value})
 
   return (
     <div>
@@ -31,7 +39,12 @@ function App() {
         <div>
           name:
           {' '}
-          <input value={newName} onChange={changeName} />
+          <input value={newEntry.name} onChange={changeName} />
+        </div>
+        <div>
+          number:
+          {' '}
+          <input value={newEntry.phone} onChange={changePhone} />
         </div>
         <div>
           <button type="submit">add</button>
@@ -39,7 +52,7 @@ function App() {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map((person) => <li key={person.id}>{person.name}</li>)}
+        {persons.map((person) => <li key={person.id}>{person.name} {person.phone}</li>)}
       </ul>
     </div>
   );
