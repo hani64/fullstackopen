@@ -1,9 +1,9 @@
 import { useEffect, useReducer, useState } from 'react'
-import axios from 'axios'
 
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Services from './services'
 
 function App() {
   const [persons, setPersons] = useState([])
@@ -15,10 +15,7 @@ function App() {
     { name: '', phone: '' }
   )
   useEffect(() => {
-    axios.get('http://localhost:3001/persons').then((res) => {
-      console.log(res.data)
-      setPersons(res.data)
-    })
+    Services.getPersons().then((persons) => setPersons(persons))
   }, [])
 
   const addName = (e) => {
@@ -34,11 +31,15 @@ function App() {
       alert(`Please enter something for both fields`)
       return
     }
-    setPersons([
-      ...persons,
-      { name: newEntry.name, phone: newEntry.phone, id: persons.length + 1 },
-    ])
-    setNewEntry({ name: '', phone: '' })
+    const newPerson = {
+      name: newEntry.name,
+      phone: newEntry.phone,
+      id: persons.length + 1,
+    }
+    Services.sendPerson(newPerson).then((person) => {
+      setPersons([...persons, person])
+      setNewEntry({ name: '', phone: '' })
+    })
   }
   const changeName = (e) => setNewEntry({ name: e.target.value })
   const changePhone = (e) => setNewEntry({ phone: e.target.value })
