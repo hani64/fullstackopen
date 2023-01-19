@@ -2,9 +2,7 @@ import Services from '../services'
 
 const Persons = ({ persons, filter, setPersons }) => {
   const deletePerson = (Oldperson) => {
-    if (!window.confirm(`Delete ${Oldperson.name}?`)) {
-      return
-    }
+    if (!window.confirm(`Delete ${Oldperson.name}?`)) return
     Services.deletePerson(Oldperson.id)
       .then((res) => console.log(res))
       .catch((err) => console.log(err))

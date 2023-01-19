@@ -22,23 +22,38 @@ function App() {
 
   const addName = (e) => {
     e.preventDefault()
-    const names = persons.map((person) => person.name)
+    const dupePerson = persons.find((person) => person.name === newEntry.name)
 
-    if (names.includes(newEntry.name)) {
-      alert(`${newEntry.name} is already added to phonebook`)
+    if (dupePerson) {
+      if (
+        !window.confirm(
+          `${newEntry.name} is already added to phonebook, replace the old number with a new one?`
+        )
+      )
+        return
+      Services.updatePerson(dupePerson.id, {
+        ...dupePerson,
+        phone: newEntry.phone,
+      })
       setNewEntry({ name: '', phone: '' })
+      setPersons([
+        ...persons.filter((person) => person.id !== dupePerson.id),
+        {
+          ...dupePerson,
+          phone: newEntry.phone,
+        },
+      ])
       return
     }
     if (newEntry.name === '' || newEntry.phone === '') {
       alert(`Please enter something for both fields`)
       return
     }
-    const newPerson = {
+    Services.sendPerson({
       name: newEntry.name,
       phone: newEntry.phone,
       id: persons.length + 1,
-    }
-    Services.sendPerson(newPerson)
+    })
       .then((person) => {
         setPersons([...persons, person])
         setNewEntry({ name: '', phone: '' })
@@ -56,7 +71,7 @@ function App() {
       <h2>add a new</h2>
       <PersonForm {...{ addName, newEntry, changeName, changePhone }} />
       <h2>Numbers</h2>
-      <Persons {...{ persons, filter , setPersons}} />
+      <Persons {...{ persons, filter, setPersons }} />
     </div>
   )
 }
