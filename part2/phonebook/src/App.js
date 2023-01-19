@@ -15,7 +15,9 @@ function App() {
     { name: '', phone: '' }
   )
   useEffect(() => {
-    Services.getPersons().then((persons) => setPersons(persons))
+    Services.getPersons()
+      .then((persons) => setPersons(persons))
+      .catch((err) => console.log(err))
   }, [])
 
   const addName = (e) => {
@@ -36,10 +38,12 @@ function App() {
       phone: newEntry.phone,
       id: persons.length + 1,
     }
-    Services.sendPerson(newPerson).then((person) => {
-      setPersons([...persons, person])
-      setNewEntry({ name: '', phone: '' })
-    })
+    Services.sendPerson(newPerson)
+      .then((person) => {
+        setPersons([...persons, person])
+        setNewEntry({ name: '', phone: '' })
+      })
+      .catch((err) => console.log(err))
   }
   const changeName = (e) => setNewEntry({ name: e.target.value })
   const changePhone = (e) => setNewEntry({ phone: e.target.value })
@@ -52,7 +56,7 @@ function App() {
       <h2>add a new</h2>
       <PersonForm {...{ addName, newEntry, changeName, changePhone }} />
       <h2>Numbers</h2>
-      <Persons {...{ persons, filter }} />
+      <Persons {...{ persons, filter , setPersons}} />
     </div>
   )
 }

@@ -31,4 +31,13 @@ const updatePerson = (id, newPerson) => {
   })
 }
 
-export default { getPersons, sendPerson, updatePerson }
+const deletePerson = (id) => {
+  return axios.delete(`${URL}/${id}`).then((res, err) => {
+    if (err) {
+      return err
+    }
+    return res.data
+  })
+}
+
+export default { getPersons, sendPerson, updatePerson, deletePerson }
